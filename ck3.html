@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/zepto.js"></script>
+		<script src="js/swiper.min.js"></script>
+		<script src="js/iscroll-probe.js"></script>
+		<link rel="stylesheet" href="css/swiper.min.css" />
+		<style>
+			*{
+				margin:0;
+				padding:0;
+				list-style: none;
+			}
+			html,body,.box{
+				height:100%;
+			}
+			.box{
+				display: flex;
+				flex-direction: column;
+			}
+			
+			header{
+				display: flex;
+				justify-content: space-between;
+				border-radius: 10px;
+				overflow: hidden;
+				border:1px solid green;
+			}
+			header div{
+				width:50%;
+				box-sizing: border-box;
+				border-right:1px solid green;
+				color:green;
+				font-size:20px;
+				text-align: center;
+				line-height: 50px;
+				
+			}
+			header div.bgColor{
+				background: green;
+				color:#fff;
+			}
+			
+			main{
+				flex-grow: 1;
+				background: red;;
+			}
+			#main{
+				margin:0;
+			}
+			#main , .swiper-wrapper, .swiper-slide{
+				height:100%;
+			}
+			#main .swiper-slide{
+				height:100%;
+				width:100%;
+			}
+			#main li{
+			   line-height: 200px;
+			   border:2px solid #000;
+			   text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="box">
+			<header>
+				<div class="bgColor">热门展会</div>
+				<div>推荐站桩</div>
+			</header>
+			<!---给main设置swiper--->
+			<main class="swiper-container" id="main">
+				<!--项目容器--->
+				<div class="swiper-wrapper">
+					<div class="swiper-slide" id="ss" style="background: yellow;">				
+						<ul>
+							<li>222</li>
+							<li>333</li>
+							<li>444</li>
+							<li>555</li>
+							<li>6666</li>
+							<li>222</li>
+							<li>333</li>
+							<li>444</li>
+							<li>555</li>
+							<li>6666</li>
+							<li>222</li>
+							<li>333</li>
+							<li>444</li>
+							<li>555</li>
+							<li>6666</li>
+						</ul>
+					</div>
+					<div class="swiper-slide"  style="background: pink;">2</div>
+				</div>
+			</main>		
+		</div>
+		
+		
+		<script>
+			
+			var  swiper = new Swiper("#main",{
+				onSlideChangeEnd:function(){
+					//获取激活状态下标
+					var  index = swiper.activeIndex;					
+					//改变按钮样式‘
+					$("header div").eq(index).addClass("bgColor").siblings().removeClass("bgColor")
+					
+				}
+			});
+			
+			$("header div").click(function(){
+				//获取当前索引值
+				var  index = $(this).index();
+				//改变当前点击div样式
+				$(this).addClass("bgColor").siblings().removeClass("bgColor");
+				//改变激活的项目		
+				swiper.slideTo(index)
+			})
+			
+			var flag=0; //flag==1 触发下拉刷新
+			
+			//iscroll初始化
+			var iscroll = new IScroll("#ss",{
+				probeType:3
+			})
+			
+			//iscroll 滚动事件  没滚动一像素触发一次
+			iscroll.on("scroll",function(){
+				//this.y当前位置
+				if(this.y>100){
+					flag=1
+				}
+			})
+			
+			//滚动接触之后触发
+			iscroll.on("scrollEnd",function(){
+				
+				if(flag==1){
+					$("ul").prepend("<li style='background:#ff6600;'>1111</li>");
+					//指令初始化
+					flag=0;
+					//刷新
+					iscroll.refresh();
+				}
+				
+			})
+		</script>
+	</body>
+</html>
